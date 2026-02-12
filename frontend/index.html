@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intern Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body>
+
+    <div id="app">
+
+        <header>
+            <h1>Intern Management System</h1>
+            <p>Welcome to the team portal</p>
+        </header>
+
+        <div class="nav-bar">
+            <button @click="changeView('list')">View All Interns</button>
+            <button @click="changeView('form')">Add New Intern</button>
+            <button @click="runCoffeeRoulette" class="special-btn">Coffee Roulette</button>
+        </div>
+
+        <!-- Coffee Winner -->
+        <div v-if="luckyIntern" class="lucky-winner">
+            <h3>🎉 Coffee Run Winner: {{ luckyIntern.name }}! 🎉</h3>
+            <p>Get Coffee for everyone.</p>
+        </div>
+
+        <!-- ================= LIST VIEW ================= -->
+        <div v-if="currentView === 'list'" class="content-section">
+            <h2>Intern Directory</h2>
+
+            <div v-if="interns.length === 0" class="empty-msg">
+                No interns found. Add some data!
+            </div>
+
+            <table v-else>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="intern in interns" :key="intern.id">
+                        <td>{{ intern.id }}</td>
+                        <td>{{ intern.name }}</td>
+                        <td>{{ intern.email }}</td>
+                        <td>{{ intern.department }}</td>
+                        <td>
+                            <button @click="prepareEdit(intern)" class="edit-btn">Edit</button>
+                            <button @click="openDeleteModal(intern)" class="delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ================= FORM VIEW ================= -->
+        <div v-if="currentView === 'form'" class="content-section">
+            <h2>{{ isEditing ? 'Update Intern' : 'Add New Intern' }}</h2>
+
+            <form @submit.prevent="saveIntern" class="intern-form">
+
+                <div class="form-group">
+                    <label>Full Name:</label>
+                    <input type="text" v-model="form.name" :class="{ 'error-input': errors.name }"
+                        placeholder="e.g. John Doe">
+                    <small class="error-msg" v-if="errors.name">{{ errors.name }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address:</label>
+                    <input type="email" v-model="form.email" :class="{ 'error-input': errors.email }"
+                        placeholder="e.g. john@email.com">
+
+                    <small class="error-msg" v-if="errors.email">{{ errors.email }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Department:</label>
+                    <select v-model="form.department" :class="{ 'error-input': errors.department }">
+
+                        <option disabled value="">Select Department</option>
+                        <option>AI</option>
+                        <option>Digital Application Development</option>
+                        <option>Data Management</option>
+                        <option>APIM</option>
+                        <option>Client Success</option>
+                        <option>HR</option>
+                    </select>
+                    <small class="error-msg" v-if="errors.department">{{ errors.department }}</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">Save Details</button>
+                    <button type="button" @click="changeView('list')" class="cancel-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ================= DELETE MODAL ================= -->
+        <div v-if="showDeleteModal" class="modal-overlay" @click.self="closeDeleteModal">
+            <div class="modal-box">
+                <h3>Confirm Deletion</h3>
+                <p>
+                    Are you sure you want to delete
+                    <strong>{{ internToDelete.name }}</strong>?
+                </p>
+                <div class="modal-actions">
+                    <button class="delete-btn" @click="confirmDelete">
+                        Yes, Delete
+                    </button>
+                    <button class="cancel-btn" @click="closeDeleteModal">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= NO INTERN MODAL ================= -->
+        <div v-if="showNoInternModal" class="modal-overlay" @click.self="closeNoInternModal">
+            <div class="modal-box">
+                <h3>No Interns Available</h3>
+                <p>There are no interns in the system for Coffee Roulette.</p>
+
+                <div class="modal-actions">
+                    <button class="save-btn" @click="goToAddIntern">
+                        Add Intern
+                    </button>
+                    <button class="cancel-btn" @click="closeNoInternModal">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
