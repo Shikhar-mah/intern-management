@@ -2,23 +2,15 @@ spring:
   application:
     name: intern_application
 
-  # H2 Database Config (In-Memory)
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password: password
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:6543/postgres?user=postgres.lzzfpbpbtjsthlcohtbc&password=GeqiH6naZzQohrbe
+    driver-class-name: org.postgresql.Driver
 
-  # Enable H2 Console (Access at http://localhost:8080/h2-console)
-  h2:
-    console:
-      enabled: true
-
-  # JPA / Hibernate Settings
   jpa:
-    show-sql: true             # Print SQL in console
+    show-sql: true
     hibernate:
-      ddl-auto: update         # Create/Update tables automatically
+      ddl-auto: update
     properties:
       hibernate:
-        format_sql: true       # Make SQL pretty in console
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
