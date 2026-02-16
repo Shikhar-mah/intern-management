@@ -9,7 +9,7 @@ const app = Vue.createApp({
         return {
 
             // Backend base URL (Spring Boot API)
-            apiUrl: 'https://intern-management-backend-kubj.onrender.com',
+            apiUrl: 'https://intern-management-backend-kubj.onrender.com/',
 
             // Controls which section is visible: 'list' or 'form'
             currentView: 'list',
